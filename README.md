@@ -9,7 +9,7 @@ The default install runs Jellyfin for watching, Jellyseerr for requests, Sonarr 
 Install Docker Engine with Compose on Linux, or Docker Desktop using Linux containers on macOS or Windows. Use Compose 2.24.4 or newer. The commands below work in a terminal or PowerShell.
 
 ```sh
-git clone git@github.com:Castrozan/arr-stack.git
+git clone https://github.com/Castrozan/arr-stack.git
 cd arr-stack
 docker compose up -d --build --wait
 docker compose run --rm manage onboard
@@ -20,8 +20,6 @@ docker compose run --rm manage credentials
 
 Open http://localhost:8096 to watch and http://localhost:5055 to request. Both use the Jellyfin `admin` credentials printed by the last command. The other applications have their own generated passwords. No passwords are committed or placed in Compose environment variables.
 
-The repository starts private. Someone cloning it needs repository access until the owner publishes it.
-
 ## Defaults I want to keep
 
 - HD profiles plus PT-BR dubbed/subtitled options, original-language television, and English-caption anime preferences.
@@ -30,7 +28,7 @@ The repository starts private. Someone cloning it needs repository access until 
 - A shared `/data` filesystem for downloads and finished media so imports can use hardlinks.
 - Pinned application releases, health checks, bounded container memory, and rotating logs.
 
-These are presets, not proof that a release contains a subtitle track. Bazarr connects to Sonarr and Radarr automatically; configure your subtitle providers and language preferences in Bazarr. Add your own private indexers in Prowlarr. The extracted defaults contain public indexers only.
+These are presets, not proof that a release contains a subtitle track. Bazarr connects to Sonarr and Radarr, applies one language profile for English and Brazilian Portuguese, and enables embedded subtitle extraction. Add external subtitle providers in Bazarr if you need subtitle downloads; additional providers are preserved. Add your own private indexers in Prowlarr. The extracted defaults contain public indexers only.
 
 `defaults/` owns the settings reapplied by `docker compose run --rm manage configure`. Edit those files and rebuild the tools image to change persistent policy. A dashboard edit to a managed value can be overwritten by configuration. Startup also reapplies these defaults.
 
@@ -100,7 +98,7 @@ Add the input to your system flake and import its module:
 ```nix
 {
   inputs.arr-stack = {
-    url = "git+ssh://git@github.com/Castrozan/arr-stack";
+    url = "github:Castrozan/arr-stack";
     inputs.nixpkgs.follows = "nixpkgs";
     inputs.home-manager.follows = "home-manager";
   };
@@ -132,7 +130,7 @@ Declare the existing user and its Home Manager configuration in your host flake.
 
 The Nix deployment uses bind mounts under the user's `arr-stack/config` and `arr-stack/data` directories. It preserves the original Nix layout, including Jellyfin's `/media` mount, and does not run Docker's credential initializer or onboarding. Existing installations retain their databases, accounts, credentials, and library IDs. For a fresh Nix installation, complete Jellyfin and Jellyseerr's setup and supply the administrative API key before account reconciliation can succeed. Standalone Docker volumes require an explicit state migration before switching deployment modes.
 
-`services.arrStack` exposes the host directory, bind address, UID/GID, account allowlists, browser URLs, optional NVIDIA access, SMTP settings, and removable-drive units. See `nix/nixos/options.nix` for the interface. HTTPS origins, tunnel routing, encrypted secrets, and host storage remain host configuration. The input is private; both local Nix evaluation and CI need read access to this repository.
+`services.arrStack` exposes the host directory, bind address, UID/GID, account allowlists, browser URLs, optional NVIDIA access, SMTP settings, and removable-drive units. See `nix/nixos/options.nix` for the interface. HTTPS origins, tunnel routing, encrypted secrets, and host storage remain host configuration.
 
 ## Verification and provenance
 
