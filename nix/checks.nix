@@ -44,6 +44,8 @@ let
   home = configuration.home-manager.users.media;
   compose = home.home.file."arr-stack/docker-compose.yml".source;
   environment = pkgs.writeText "arr-check.env" home.home.file."arr-stack/.env".text;
+  desiredState =
+    configuration.systemd.services.arr-config-provisioner.environment.ARR_PROVISIONER_DESIRED_STATE_DIR;
 in
 {
   deployment =
@@ -60,6 +62,9 @@ in
       == "/media";
     pkgs.runCommand "arr-stack-deployment-check" { nativeBuildInputs = [ pkgs.docker-compose ]; } ''
       docker-compose --file ${compose} --env-file ${environment} config --quiet
+      test -f ${desiredState}/prowlarr/indexer.json
+      test -f ${desiredState}/sonarr/notification.json
+      test -f ${desiredState}/radarr/notification.json
       cp ${compose} "$out"
     '';
 }

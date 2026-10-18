@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 def render_desired_state(source, private_indexer, destination):
-    shutil.copytree(source, destination)
+    shutil.copytree(source, destination, copy_function=shutil.copyfile)
     indexers = destination / "prowlarr/indexer.json"
     objects = json.loads(indexers.read_text())
     objects.append(json.loads(private_indexer.read_text()))
