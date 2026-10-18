@@ -33,6 +33,7 @@ let
     sub_filter_types application/javascript text/javascript;
     sub_filter 'rel="manifest"' 'rel="manifest" crossorigin="use-credentials"';
     sub_filter '"rel":"manifest"' '"rel":"manifest","crossorigin":"use-credentials"';
+    sub_filter '\"rel\":\"manifest\",\"href\":\"/manifest.json\",\"crossOrigin\":\"$undefined\"' '\"rel\":\"manifest\",\"href\":\"/manifest.json\",\"crossOrigin\":\"use-credentials\"';
     proxy_buffering off;
     proxy_read_timeout 3600s;
     proxy_send_timeout 3600s;
