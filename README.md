@@ -91,6 +91,49 @@ CPU playback/transcoding is the baseline. Linux hosts with the NVIDIA Container 
 
 Each server is independent. Shared-library replication and automatically selecting the nearest house's server require a separate design.
 
+## NixOS integration
+
+The flake exports `nixosModules.default` and `homeManagerModules.default`. The NixOS module wraps the same Compose services, images, and application defaults with systemd supervision, drive protection, provisioning, and host CLI tools. Docker remains the application runtime.
+
+Add the input to your system flake and import its module:
+
+```nix
+{
+  inputs.arr-stack = {
+    url = "git+ssh://git@github.com/Castrozan/arr-stack";
+    inputs.nixpkgs.follows = "nixpkgs";
+    inputs.home-manager.follows = "home-manager";
+  };
+}
+```
+
+```nix
+{ inputs, config, ... }:
+{
+  imports = [ inputs.arr-stack.nixosModules.default ];
+
+  services.arrStack = {
+    enable = true;
+    user = "media";
+    loginUsername = "admin";
+    secrets = {
+      jellyfinApiKey.file = config.age.secrets.jellyfin-api-key.path;
+      qbittorrentPassword.file = config.age.secrets.qbittorrent-password.path;
+      radarrPassword.file = config.age.secrets.radarr-password.path;
+      sonarrPassword.file = config.age.secrets.sonarr-password.path;
+      prowlarrPassword.file = config.age.secrets.prowlarr-password.path;
+      bazarrPassword.file = config.age.secrets.bazarr-password.path;
+    };
+  };
+}
+```
+
+Declare the existing user and its Home Manager configuration in your host flake. The module imports Home Manager's NixOS integration. Supply runtime secret paths through your secret manager; secret contents never belong in Nix expressions. An optional `source` beside each secret's `file` accepts the encrypted source so secret changes restart the matching provisioner.
+
+The Nix deployment uses bind mounts under the user's `arr-stack/config` and `arr-stack/data` directories. It preserves the original Nix layout, including Jellyfin's `/media` mount, and does not run Docker's credential initializer or onboarding. Existing installations retain their databases, accounts, credentials, and library IDs. For a fresh Nix installation, complete Jellyfin and Jellyseerr's setup and supply the administrative API key before account reconciliation can succeed. Standalone Docker volumes require an explicit state migration before switching deployment modes.
+
+`services.arrStack` exposes the host directory, bind address, UID/GID, account allowlists, browser URLs, optional NVIDIA access, SMTP settings, and removable-drive units. See `nix/nixos/options.nix` for the interface. HTTPS origins, tunnel routing, encrypted secrets, and host storage remain host configuration. The input is private; both local Nix evaluation and CI need read access to this repository.
+
 ## Verification and provenance
 
 ```sh
@@ -98,9 +141,9 @@ docker build --target tests -t arr-stack-tests .
 docker run --rm arr-stack-tests
 ```
 
-CI validates Compose and runs isolated Linux smoke installations, including onboarding, a friend account, repeated configuration, hardlinks, and restart persistence. macOS and Windows use the same Linux containers; native Docker Desktop execution needs separate verification.
+CI validates the Nix deployment and its native automation, then validates Compose and runs isolated Linux smoke installations, including onboarding, a friend account, repeated configuration, hardlinks, and restart persistence. macOS and Windows use the same Linux containers; native Docker Desktop execution needs separate verification.
 
-The extracted application settings, Python automation, and image customizations originate in https://github.com/Castrozan/.dotfiles/tree/9f9157b56298d2c6fab36a2e0835236d3127673e/machine-configuration/media/arr-stack. Host services, mount guards, VPN configuration, Discord guest commands, and personal identities stay outside this project.
+The extracted application settings, Python automation, Nix services, and image customizations originate in https://github.com/Castrozan/.dotfiles/tree/9f9157b56298d2c6fab36a2e0835236d3127673e/machine-configuration/media/arr-stack. Personal account allowlists, domain names, VPN configuration, and secret values stay in the consuming host configuration.
 
 Own integration code is MIT licensed. Miwayomi patch material retains the upstream Apache-2.0 license in `images/miwayomi/LICENSE`; container applications retain their respective licenses. The local patches are carried because this preset depends on their playback, source, artwork, and progress behavior.
 

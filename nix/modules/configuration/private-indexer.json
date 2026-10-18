@@ -1,0 +1,383 @@
+{
+  "added": "2026-07-04T23:04:00Z",
+  "appProfileId": 1,
+  "capabilities": {
+    "bookSearchParams": ["q"],
+    "categories": [
+      {
+        "id": 2000,
+        "name": "Movies",
+        "subCategories": []
+      },
+      {
+        "id": 100001,
+        "name": "Filmes",
+        "subCategories": []
+      },
+      {
+        "id": 5000,
+        "name": "TV",
+        "subCategories": [
+          {
+            "id": 5070,
+            "name": "TV/Anime",
+            "subCategories": []
+          }
+        ]
+      },
+      {
+        "id": 100002,
+        "name": "S\u00e9ries",
+        "subCategories": []
+      },
+      {
+        "id": 100003,
+        "name": "Animes",
+        "subCategories": []
+      },
+      {
+        "id": 8000,
+        "name": "Other",
+        "subCategories": []
+      },
+      {
+        "id": 100004,
+        "name": "Cursos",
+        "subCategories": []
+      },
+      {
+        "id": 1000,
+        "name": "Console",
+        "subCategories": []
+      },
+      {
+        "id": 100005,
+        "name": "Games",
+        "subCategories": []
+      },
+      {
+        "id": 7000,
+        "name": "Books",
+        "subCategories": [
+          {
+            "id": 7020,
+            "name": "Books/EBook",
+            "subCategories": []
+          },
+          {
+            "id": 7030,
+            "name": "Books/Comics",
+            "subCategories": []
+          }
+        ]
+      },
+      {
+        "id": 100006,
+        "name": "Livros",
+        "subCategories": []
+      },
+      {
+        "id": 100007,
+        "name": "HQs e Mangas",
+        "subCategories": []
+      },
+      {
+        "id": 3000,
+        "name": "Audio",
+        "subCategories": [
+          {
+            "id": 3030,
+            "name": "Audio/Audiobook",
+            "subCategories": []
+          }
+        ]
+      },
+      {
+        "id": 100008,
+        "name": "AudioBooks",
+        "subCategories": []
+      },
+      {
+        "id": 4000,
+        "name": "PC",
+        "subCategories": []
+      },
+      {
+        "id": 100009,
+        "name": "Programas",
+        "subCategories": []
+      },
+      {
+        "id": 100011,
+        "name": "Diversos",
+        "subCategories": []
+      },
+      {
+        "id": 100010,
+        "name": "Materiais de Apoio",
+        "subCategories": []
+      },
+      {
+        "id": 100012,
+        "name": "M\u00fasicas",
+        "subCategories": []
+      }
+    ],
+    "limitsDefault": 100,
+    "limitsMax": 100,
+    "movieSearchParams": ["q", "imdbId", "tmdbId"],
+    "musicSearchParams": ["q"],
+    "searchParams": ["q", "q"],
+    "supportsRawSearch": false,
+    "tvSearchParams": ["q", "season", "ep", "imdbId", "tvdbId", "tmdbId"]
+  },
+  "configContract": "CardigannSettings",
+  "definitionName": "samaritano",
+  "description": "SAMARITANO is a BRAZILIAN Private tracker for MOVIES / TV / GENERAL",
+  "downloadClientId": 0,
+  "enable": true,
+  "encoding": "Unicode (UTF-8)",
+  "fields": [
+    {
+      "advanced": false,
+      "hidden": "hidden",
+      "isFloat": false,
+      "name": "definitionFile",
+      "order": 0,
+      "privacy": "normal",
+      "type": "textbox",
+      "value": "samaritano"
+    },
+    {
+      "advanced": false,
+      "helpText": "Select which base url Prowlarr will use for requests to the site",
+      "isFloat": false,
+      "label": "Base Url",
+      "name": "baseUrl",
+      "order": 1,
+      "privacy": "normal",
+      "selectOptionsProviderAction": "getUrls",
+      "type": "select",
+      "value": "https://samaritano.cc/"
+    },
+    {
+      "advanced": true,
+      "helpText": "The number of max queries as specified by the respective unit that Prowlarr will allow to the site",
+      "isFloat": false,
+      "label": "Query Limit",
+      "name": "baseSettings.queryLimit",
+      "order": 2,
+      "privacy": "normal",
+      "type": "number"
+    },
+    {
+      "advanced": true,
+      "helpText": "The number of max grabs as specified by the respective unit that Prowlarr will allow to the site",
+      "isFloat": false,
+      "label": "Grab Limit",
+      "name": "baseSettings.grabLimit",
+      "order": 3,
+      "privacy": "normal",
+      "type": "number"
+    },
+    {
+      "advanced": true,
+      "helpText": "The unit of time for counting limits per indexer",
+      "isFloat": false,
+      "label": "Limits Unit",
+      "name": "baseSettings.limitsUnit",
+      "order": 4,
+      "privacy": "normal",
+      "selectOptions": [
+        {
+          "hint": "(0)",
+          "name": "Day",
+          "order": 0,
+          "value": 0
+        },
+        {
+          "hint": "(1)",
+          "name": "Hour",
+          "order": 1,
+          "value": 1
+        }
+      ],
+      "type": "select",
+      "value": 0
+    },
+    {
+      "advanced": true,
+      "helpText": "Minimum seeders required by the Applications for the indexer to grab, empty is Sync profile's default",
+      "isFloat": false,
+      "label": "Apps Minimum Seeders",
+      "name": "torrentBaseSettings.appMinimumSeeders",
+      "order": 5,
+      "privacy": "normal",
+      "type": "number"
+    },
+    {
+      "advanced": false,
+      "helpText": "The ratio a torrent should reach before stopping, empty uses the download client's default. Ratio should be at least 1.0 and follow the indexers rules",
+      "isFloat": true,
+      "label": "Seed Ratio",
+      "name": "torrentBaseSettings.seedRatio",
+      "order": 6,
+      "privacy": "normal",
+      "type": "number"
+    },
+    {
+      "advanced": true,
+      "helpText": "The time a torrent should be seeded before stopping, empty uses the download client's default",
+      "isFloat": false,
+      "label": "Seed Time",
+      "name": "torrentBaseSettings.seedTime",
+      "order": 7,
+      "privacy": "normal",
+      "type": "number",
+      "unit": "minutes"
+    },
+    {
+      "advanced": true,
+      "helpText": "The time a pack (season or discography) torrent should be seeded before stopping, empty is app's default",
+      "isFloat": false,
+      "label": "Pack Seed Time",
+      "name": "torrentBaseSettings.packSeedTime",
+      "order": 8,
+      "privacy": "normal",
+      "type": "number",
+      "unit": "minutes"
+    },
+    {
+      "advanced": true,
+      "helpText": "When enabled, this indexer will prefer the use of magnet URLs for grabs with fallback to torrent links",
+      "isFloat": false,
+      "label": "Prefer Magnet URL",
+      "name": "torrentBaseSettings.preferMagnetUrl",
+      "order": 9,
+      "privacy": "normal",
+      "type": "checkbox",
+      "value": false
+    },
+    {
+      "advanced": false,
+      "isFloat": false,
+      "label": "APIKey",
+      "name": "apikey",
+      "order": 0,
+      "privacy": "normal",
+      "type": "textbox",
+      "value": "@SAMARITANO_APIKEY@"
+    },
+    {
+      "advanced": false,
+      "isFloat": false,
+      "label": "About your API key",
+      "name": "info_key",
+      "order": 1,
+      "privacy": "normal",
+      "type": "info",
+      "value": "Find or Generate a new API Token by accessing your <a href=\"https://samaritano.cc/\" target=\"_blank\">SAMARITANO</a> account <i>My Settings</i> page and clicking on the <b>API Key</b> tab."
+    },
+    {
+      "advanced": false,
+      "isFloat": false,
+      "label": "Search freeleech only",
+      "name": "freeleech",
+      "order": 2,
+      "privacy": "normal",
+      "type": "checkbox",
+      "value": false
+    },
+    {
+      "advanced": false,
+      "isFloat": false,
+      "label": "Use filename as title for single file releases",
+      "name": "single_file_release_use_filename",
+      "order": 3,
+      "privacy": "normal",
+      "type": "checkbox",
+      "value": false
+    },
+    {
+      "advanced": false,
+      "isFloat": false,
+      "label": "Sort requested from site",
+      "name": "sort",
+      "order": 4,
+      "privacy": "normal",
+      "selectOptions": [
+        {
+          "name": "created",
+          "order": 0,
+          "value": 0
+        },
+        {
+          "name": "title",
+          "order": 0,
+          "value": 1
+        },
+        {
+          "name": "seeders",
+          "order": 0,
+          "value": 2
+        },
+        {
+          "name": "size",
+          "order": 0,
+          "value": 3
+        }
+      ],
+      "type": "select",
+      "value": 0
+    },
+    {
+      "advanced": false,
+      "isFloat": false,
+      "label": "Order requested from site",
+      "name": "type",
+      "order": 5,
+      "privacy": "normal",
+      "selectOptions": [
+        {
+          "name": "asc",
+          "order": 0,
+          "value": 0
+        },
+        {
+          "name": "desc",
+          "order": 0,
+          "value": 1
+        }
+      ],
+      "type": "select",
+      "value": 1
+    },
+    {
+      "advanced": false,
+      "isFloat": false,
+      "label": "Account Inactivity",
+      "name": "info_activity",
+      "order": 6,
+      "privacy": "normal",
+      "type": "info",
+      "value": "Your account will be considered inactive if you have not logged in to the site for more than 90 days. After 30 days of inactivity (i.e. 30 days without logging in), your account will be removed from the tracker. Please note: The groups that suffer from inactivity are: User and Leech."
+    }
+  ],
+  "implementation": "Cardigann",
+  "implementationName": "Cardigann",
+  "indexerUrls": ["https://samaritano.cc/"],
+  "infoLink": "https://wiki.servarr.com/prowlarr/supported-indexers#samaritano",
+  "language": "pt-BR",
+  "legacyUrls": [],
+  "name": "SAMARITANO",
+  "priority": 25,
+  "privacy": "private",
+  "protocol": "torrent",
+  "redirect": false,
+  "sortName": "samaritano",
+  "supportsPagination": false,
+  "supportsRedirect": false,
+  "supportsRss": true,
+  "supportsSearch": true,
+  "tags": []
+}

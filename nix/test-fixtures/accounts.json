@@ -1,0 +1,5 @@
+{
+  "privateLibraryAccounts": ["private-requests", "jellyseerr"],
+  "administratorAccounts": ["jellyseerr"],
+  "advancedRequestAccounts": ["lucas", "rogerio"]
+}

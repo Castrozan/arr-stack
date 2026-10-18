@@ -1,4 +1,8 @@
+import os
+
 from account_policy import account_names
+
+LIBRARY_MEDIA_ROOT = os.environ.get("ARR_USERS_LIBRARY_ROOT", "/data/media")
 
 PRIVATE_LIBRARY_ACCOUNT_USERNAMES = account_names("privateLibraryAccounts")
 
@@ -6,12 +10,12 @@ PUBLIC_LIBRARY_DECLARATIONS = [
     {
         "name": "Movies",
         "collection_type": "movies",
-        "container_path": "/data/media/movies",
+        "container_path": f"{LIBRARY_MEDIA_ROOT}/movies",
     },
     {
         "name": "TV",
         "collection_type": "tvshows",
-        "container_path": "/data/media/tv",
+        "container_path": f"{LIBRARY_MEDIA_ROOT}/tv",
     },
 ]
 
@@ -19,12 +23,12 @@ PRIVATE_LIBRARY_DECLARATIONS = [
     {
         "name": "Movies (Private)",
         "collection_type": "movies",
-        "container_path": "/data/media/movies-private",
+        "container_path": f"{LIBRARY_MEDIA_ROOT}/movies-private",
     },
     {
         "name": "TV (Private)",
         "collection_type": "tvshows",
-        "container_path": "/data/media/tv-private",
+        "container_path": f"{LIBRARY_MEDIA_ROOT}/tv-private",
     },
 ]
 

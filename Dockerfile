@@ -6,9 +6,11 @@ COPY defaults /app/defaults
 ENTRYPOINT ["python", "/app/runtime/main.py"]
 
 FROM runtime AS tests
-RUN pip install --no-cache-dir pytest==8.4.2
+RUN pip install --no-cache-dir pytest==8.4.2 PyYAML==6.0.3
 COPY tests /app/tests
 COPY config /policy
+COPY compose.yaml /app/compose.yaml
+COPY nix/modules/stack/render_compose.py /app/nix/modules/stack/render_compose.py
 ENTRYPOINT ["python", "-m", "pytest", "-q", "/app/tests"]
 
 FROM runtime AS production
