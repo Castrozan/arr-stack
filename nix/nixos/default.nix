@@ -31,7 +31,9 @@ in
     ];
     virtualisation.docker.enable = true;
     users.users.${settings.user}.extraGroups = [ "docker" ];
-    hardware.nvidia-container-toolkit.enable = settings.hardwareAcceleration == "nvidia";
+    hardware.nvidia-container-toolkit.enable = lib.mkIf (
+      settings.hardwareAcceleration == "nvidia"
+    ) true;
     home-manager.users.${settings.user} = {
       imports = [ ../modules/stack/arr-stack-home-manager.nix ];
       services.arrStack = {

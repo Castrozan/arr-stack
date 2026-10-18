@@ -17,6 +17,7 @@ let
           uid = 2000;
         };
         home-manager.useGlobalPkgs = true;
+        hardware.nvidia-container-toolkit.enable = true;
         home-manager.users.media.home.stateVersion = "25.11";
         services.arrStack = {
           enable = true;
@@ -52,7 +53,8 @@ in
   deployment =
     assert configuration.systemd.services.arr-download-cleanup.serviceConfig.User == "media";
     assert configuration.custom.arrStackOnDemandSupervisor.keepChainAlwaysOn;
-    assert configuration.hardware.nvidia-container-toolkit.enable == false;
+    assert configuration.hardware.nvidia-container-toolkit.enable;
+    assert configuration.services.arrStack.hardwareAcceleration == "cpu";
     assert configuration.services.arrStack.userId == 2000;
     assert pkgs.lib.hasInfix "chown -R 2000:100"
       configuration.systemd.services.arr-stack-front-ends-compose.preStart;
