@@ -10,6 +10,7 @@ from stack.accounts import synchronize_accounts
 from stack.configuration_lock import configuration_lock
 
 APPLICATION_URLS = {
+    "bazarr": "http://bazarr:6767",
     "radarr": "http://radarr:7878",
     "sonarr": "http://sonarr:8989",
     "prowlarr": "http://prowlarr:9696",
@@ -48,6 +49,11 @@ def configure(dry_run=False):
 def apply_configuration(dry_run):
     settings = configuration()
     plans = (
+        (
+            provisioner_core.BAZARR_CONFIGURATION_PLAN,
+            provisioner_core.provision_bazarr_configuration_step,
+            "subtitles",
+        ),
         (
             provisioner_core.HOST_LOGIN_PLAN,
             provisioner_core.provision_host_login_step,

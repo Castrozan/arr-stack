@@ -20,6 +20,11 @@ def test_prowlarr_application_is_reconciled_before_indexers():
 
 def stub_all_steps(monkeypatch):
     monkeypatch.setattr(
+        provisioner_core,
+        "provision_bazarr_configuration_step",
+        lambda configuration, step, dry_run: None,
+    )
+    monkeypatch.setattr(
         provisioner_core, "provision_step", lambda configuration, step, dry_run: None
     )
     monkeypatch.setattr(

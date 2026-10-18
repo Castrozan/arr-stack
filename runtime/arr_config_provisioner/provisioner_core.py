@@ -1,5 +1,6 @@
 from provisioner_logging import log
 from provisioning_steps import (
+    provision_bazarr_configuration_step,
     provision_host_login_step,
     provision_jellyseerr_download_tracking_step,
     provision_jellyseerr_sonarr_profile_step,
@@ -108,6 +109,8 @@ HOST_LOGIN_PLAN = [
 
 QBITTORRENT_PREFERENCE_PLAN = [{"app": "qbittorrent", "port": 8080}]
 
+BAZARR_CONFIGURATION_PLAN = [{"app": "bazarr", "port": 6767}]
+
 
 def run_plan(configuration, plan, step_runner, outcome_label, dry_run):
     failed_steps = 0
@@ -122,6 +125,7 @@ def run_plan(configuration, plan, step_runner, outcome_label, dry_run):
 
 def provision_all(configuration, dry_run):
     plans = [
+        (BAZARR_CONFIGURATION_PLAN, provision_bazarr_configuration_step, "subtitles"),
         (RESOURCE_PLAN, provision_step, "resource"),
         (QUALITY_PROFILE_PLAN, provision_quality_profile_step, "qualityprofile"),
         (

@@ -51,5 +51,5 @@ def test_configuration_failure_has_nonzero_exit_status(monkeypatch):
         provisioning, "configuration", lambda: {"jellyseerr_api_key": ""}
     )
     monkeypatch.setattr(provisioning.provisioner_core, "run_plan", lambda *arguments: 1)
-    with pytest.raises(SystemExit, match="Configuration failed in 4 steps"):
+    with pytest.raises(SystemExit, match="Configuration failed in 5 steps"):
         provisioning.configure()

@@ -1,7 +1,12 @@
 import os
 import sys
 
-from provisioner_core import provision_all, RESOURCE_PLAN, QBITTORRENT_PREFERENCE_PLAN
+from provisioner_core import (
+    BAZARR_CONFIGURATION_PLAN,
+    QBITTORRENT_PREFERENCE_PLAN,
+    RESOURCE_PLAN,
+    provision_all,
+)
 from runtime_config import (
     build_app_api_key_map,
     build_secret_map,
@@ -35,7 +40,11 @@ def resolve_configuration():
     return {
         "application_urls": {
             step["app"]: f"http://{bind_address}:{step['port']}"
-            for step in [*RESOURCE_PLAN, *QBITTORRENT_PREFERENCE_PLAN]
+            for step in [
+                *RESOURCE_PLAN,
+                *QBITTORRENT_PREFERENCE_PLAN,
+                *BAZARR_CONFIGURATION_PLAN,
+            ]
         },
         "config_root": config_root,
         "jellyseerr_api_key": read_jellyseerr_api_key(config_root),

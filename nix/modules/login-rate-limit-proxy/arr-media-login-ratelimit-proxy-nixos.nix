@@ -28,6 +28,9 @@ let
 
   commonProxyExtraConfig = ''
     proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header Accept-Encoding "";
+    sub_filter_once off;
+    sub_filter 'rel="manifest"' 'rel="manifest" crossorigin="use-credentials"';
     proxy_buffering off;
     proxy_read_timeout 3600s;
     proxy_send_timeout 3600s;

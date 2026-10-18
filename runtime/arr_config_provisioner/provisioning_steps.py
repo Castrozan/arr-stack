@@ -1,8 +1,14 @@
+import json
+from pathlib import Path
+
 from arr_api_client import wait_for_api_ready
+from bazarr_api_client import BazarrApiClient, read_bazarr_api_key
+from bazarr_configuration_provisioner import provision_subtitles
 from host_auth_provisioner import provision_host_login
 from jellyseerr_download_tracking_provisioner import provision_server_download_tracking
 from jellyseerr_sonarr_profile_provisioner import provision_sonarr_profiles
 from provisioner_logging import log
+from prowlarr_application_provisioner import remove_retired_applications
 from qbittorrent_preference_provisioner import provision_qbittorrent_preferences
 from quality_profile_provisioner import provision_quality_profiles
 from runtime_config import (
@@ -13,6 +19,17 @@ from runtime_config import (
 from upsert_engine import upsert_resource
 
 APP_API_VERSION = {"radarr": "v3", "sonarr": "v3", "prowlarr": "v1"}
+
+
+def provision_bazarr_configuration_step(configuration, step, dry_run):
+    base_url = configuration["application_urls"]["bazarr"]
+    api_key = read_bazarr_api_key(configuration["config_root"])
+    if not wait_for_api_ready(f"{base_url}/api", api_key):
+        raise RuntimeError("Bazarr API is not reachable")
+    definition = json.loads(
+        (Path(configuration["desired_state_dir"]) / "bazarr/subtitles.json").read_text()
+    )
+    return provision_subtitles(BazarrApiClient(base_url, api_key), definition, dry_run)
 
 
 def build_base_url(bind_address, port, app):
@@ -47,6 +64,12 @@ def provision_step(configuration, step, dry_run):
         dry_run,
     )
     log(f"{step['app']}/{step['resource']}: {outcomes}")
+    if (
+        step["app"] == "prowlarr"
+        and step["resource"] == "applications"
+        and "skipped-missing-secret" not in outcomes
+    ):
+        remove_retired_applications(base_url, api_key, desired_objects, dry_run)
 
 
 def provision_quality_profile_step(configuration, step, dry_run):

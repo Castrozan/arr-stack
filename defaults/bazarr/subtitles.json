@@ -1,0 +1,34 @@
+{
+  "languages": [
+    "en",
+    "pb"
+  ],
+  "providers": [
+    "embeddedsubtitles",
+    "podnapisi"
+  ],
+  "profile": {
+    "name": "English + Brazilian Portuguese",
+    "cutoff": 65535,
+    "items": [
+      {
+        "id": 1,
+        "language": "en",
+        "forced": "False",
+        "hi": "False",
+        "audio_exclude": "False"
+      },
+      {
+        "id": 2,
+        "language": "pb",
+        "forced": "False",
+        "hi": "False",
+        "audio_exclude": "False"
+      }
+    ],
+    "mustContain": [],
+    "mustNotContain": [],
+    "originalFormat": 0,
+    "tag": null
+  }
+}
