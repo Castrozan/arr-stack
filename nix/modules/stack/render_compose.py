@@ -75,6 +75,10 @@ def render_compose(document, settings):
         "local/jellyseerr-email:${JELLYSEERR_EMAIL_IMAGE_VERSION}"
     )
     services["jellyseerr"]["pull_policy"] = "build"
+    services["jellyseerr"]["user"] = "${PUID}:${PGID}"
+    services["jellyseerr"]["tmpfs"] = [
+        "/app/.next/cache:uid=${PUID},gid=${PGID},mode=0700,size=67108864"
+    ]
     services["miwayomi"]["build"]["context"] = "${MIWAYOMI_BUILD_CONTEXT}"
     services["miwayomi"]["build"]["args"]["MIWAYOMI_WEB_CACHE_VERSION"] = (
         "${MIWAYOMI_WEB_CACHE_VERSION}"

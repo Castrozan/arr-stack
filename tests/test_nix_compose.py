@@ -71,3 +71,11 @@ def test_loopback_bind_address_does_not_duplicate_published_ports():
     assert (
         len(services["jellyfin"]["ports"]) == len(services["jellyseerr"]["ports"]) == 1
     )
+
+
+def test_jellyseerr_configuration_and_cache_belong_to_the_configured_nix_owner():
+    service = render()["services"]["jellyseerr"]
+    assert service["user"] == "${PUID}:${PGID}"
+    assert service["tmpfs"] == [
+        "/app/.next/cache:uid=${PUID},gid=${PGID},mode=0700,size=67108864"
+    ]

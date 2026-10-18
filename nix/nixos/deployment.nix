@@ -60,7 +60,7 @@ in
       {
         docker.unitConfig.RequiresMountsFor = [ "${settings.directory}/data" ];
         arr-stack-front-ends-compose = {
-          preStart = "${pkgs.coreutils}/bin/chown -R 1000:1000 -- ${lib.escapeShellArg "${settings.directory}/config/jellyseerr"}";
+          preStart = "${pkgs.coreutils}/bin/chown -R ${toString settings.userId}:${toString settings.groupId} -- ${lib.escapeShellArg "${settings.directory}/config/jellyseerr"}";
           restartTriggers = [ ../../images/jellyseerr ];
         };
         arr-download-cleanup.bindsTo = lib.optional (settings.dataMountUnit != null) settings.dataMountUnit;
