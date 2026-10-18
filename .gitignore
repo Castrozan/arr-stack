@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+.deep-work/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+config/local*.json

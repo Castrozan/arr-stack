@@ -1,0 +1,25 @@
+services:
+  qbittorrent:
+    ports: !reset []
+  sonarr:
+    ports: !reset []
+  radarr:
+    ports: !reset []
+  prowlarr:
+    ports: !reset []
+  bazarr:
+    ports: !reset []
+  jellyfin:
+    ports: !reset []
+  jellyseerr:
+    ports: !reset []
+  suwayomi:
+    ports: !reset []
+  miwayomi-gateway:
+    ports: !reset []
+  flaresolverr:
+    ports: !reset []
+  audiobookshelf:
+    ports: !reset []
+  readmeabook:
+    ports: !reset []

@@ -1,0 +1,616 @@
+name: ${COMPOSE_PROJECT_NAME:-arr-stack}
+services:
+  qbittorrent:
+    mem_limit: 512m
+    image: lscr.io/linuxserver/qbittorrent:4.6.7
+    restart: unless-stopped
+    networks:
+      - arrnet
+    ports:
+      - ${ARR_BIND_ADDR:-127.0.0.1}:${QBITTORRENT_PORT:-8080}:8080
+      - ${TORRENT_PORT:-6881}:6881/tcp
+      - ${TORRENT_PORT:-6881}:6881/udp
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      WEBUI_PORT: "8080"
+      TORRENTING_PORT: "6881"
+      UMASK: "002"
+    volumes:
+      - qbittorrent:/config
+      - data:/data
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:8080/
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    depends_on:
+      initialize:
+        condition: service_completed_successfully
+  prowlarr:
+    mem_limit: 768m
+    image: lscr.io/linuxserver/prowlarr:2.4.0.5397-ls151@sha256:3950b5e48cf4ba9dab78fe14038dd7f062e66b7b4ab368b02c94a13f6a3dae9f
+    restart: unless-stopped
+    networks:
+      - arrnet
+    ports:
+      - ${ARR_BIND_ADDR:-127.0.0.1}:${PROWLARR_PORT:-9696}:9696
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      UMASK: "002"
+    volumes:
+      - prowlarr:/config
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:9696/ping
+      interval: 30s
+      timeout: 5s
+      start_period: 120s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    depends_on:
+      initialize:
+        condition: service_completed_successfully
+  sonarr:
+    mem_limit: 768m
+    image: lscr.io/linuxserver/sonarr:4.0.19.2979-ls316@sha256:fbb15bb4fb14d1ffe017f6be0e3fed8f1b300e4687e329767da0b61f36ba1eed
+    restart: unless-stopped
+    networks:
+      - arrnet
+    ports:
+      - ${ARR_BIND_ADDR:-127.0.0.1}:${SONARR_PORT:-8989}:8989
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      UMASK: "002"
+    volumes:
+      - sonarr:/config
+      - data:/data
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:8989/ping
+      interval: 30s
+      timeout: 5s
+      start_period: 120s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    depends_on:
+      initialize:
+        condition: service_completed_successfully
+  radarr:
+    mem_limit: 512m
+    image: lscr.io/linuxserver/radarr:6.2.1.10461-ls308@sha256:39da107b5a9371fdaa651bd188049b863716a815385eb3a30d41071b7e1aeb33
+    restart: unless-stopped
+    networks:
+      - arrnet
+    ports:
+      - ${ARR_BIND_ADDR:-127.0.0.1}:${RADARR_PORT:-7878}:7878
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      UMASK: "002"
+    volumes:
+      - radarr:/config
+      - data:/data
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:7878/ping
+      interval: 30s
+      timeout: 5s
+      start_period: 120s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    depends_on:
+      initialize:
+        condition: service_completed_successfully
+  bazarr:
+    mem_limit: 512m
+    image: lscr.io/linuxserver/bazarr:v1.5.6-ls352@sha256:aaaa087af75a73b7ac765dcc5d748874cfafdb93c23ec9f64fbb481dea291b23
+    restart: unless-stopped
+    networks:
+      - arrnet
+    ports:
+      - ${ARR_BIND_ADDR:-127.0.0.1}:${BAZARR_PORT:-6767}:6767
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      UMASK: "002"
+    volumes:
+      - bazarr:/config
+      - data:/data
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:6767/
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    depends_on:
+      initialize:
+        condition: service_completed_successfully
+  jellyfin:
+    mem_limit: 2g
+    image: lscr.io/linuxserver/jellyfin:10.11.11ubu2404-ls39@sha256:96d21c396f46f10578931c2941e3f2789f7087b5ab0e166afedf29e7385c6aa7
+    restart: unless-stopped
+    networks:
+      - arrnet
+    ports:
+      - ${ARR_BIND_ADDR:-127.0.0.1}:${JELLYFIN_PORT:-8096}:8096
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      UMASK: "002"
+    volumes:
+      - jellyfin:/config
+      - data:/data:ro
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:8096/health
+      interval: 30s
+      timeout: 5s
+      start_period: 120s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    depends_on:
+      initialize:
+        condition: service_completed_successfully
+  jellyseerr:
+    mem_limit: 768m
+    image: ${COMPOSE_PROJECT_NAME:-arr-stack}-jellyseerr:2.7.3
+    build:
+      context: ./images/jellyseerr
+    restart: unless-stopped
+    networks:
+      - arrnet
+    ports:
+      - ${ARR_BIND_ADDR:-127.0.0.1}:${JELLYSEERR_PORT:-5055}:5055
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      LOG_LEVEL: info
+      JELLYFIN_PUBLIC_URL: ${JELLYFIN_PUBLIC_URL:-http://localhost:8096}
+      UMASK: "002"
+    volumes:
+      - jellyseerr:/app/config
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - -qO-
+        - http://127.0.0.1:5055/api/v1/status
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    depends_on:
+      initialize:
+        condition: service_completed_successfully
+  suwayomi:
+    mem_limit: 3g
+    image: ghcr.io/suwayomi/suwayomi-server:v2.3.2243-preview@sha256:2b95476844614748285ecba0deef97cb8eabd17c6ccb58d136f829ec20b8040f
+    restart: unless-stopped
+    user: ${PUID:-1000}:${PGID:-1000}
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - arrnet
+    ports:
+      - ${ARR_BIND_ADDR:-127.0.0.1}:${SUWAYOMI_PORT:-4567}:4567
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      BIND_IP: 0.0.0.0
+      BIND_PORT: "4567"
+      DOWNLOAD_AS_CBZ: "true"
+      WEB_UI_CHANNEL: bundled
+      WEB_UI_UPDATE_INTERVAL: "0"
+      KCEF_ENABLED: "true"
+      FLARESOLVERR_ENABLED: "true"
+      FLARESOLVERR_URL: http://flaresolverr:8191
+      JAVA_TOOL_OPTIONS: -Xms128m -Xmx768m
+      UMASK: "002"
+      DOWNLOADS_PATH: /data/manga
+    volumes:
+      - suwayomi:/home/suwayomi/.local/share/Tachidesk
+      - data:/data
+    depends_on:
+      flaresolverr:
+        condition: service_healthy
+      initialize:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:4567/api/v1/health
+      interval: 30s
+      timeout: 5s
+      start_period: 120s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    profiles:
+      - manga
+  miwayomi:
+    mem_limit: 768m
+    build:
+      context: ./images/miwayomi
+      dockerfile: miwayomi.Dockerfile
+      args:
+        MIWAYOMI_WEB_CACHE_VERSION: arr-stack-0.1.0
+    image: ${COMPOSE_PROJECT_NAME:-arr-stack}-miwayomi:0.2.9
+    restart: unless-stopped
+    user: ${PUID:-1000}:${PGID:-1000}
+    networks:
+      - arrnet
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      FLARESOLVERR_URL: http://flaresolverr:8191
+      UMASK: "002"
+    volumes:
+      - miwayomi:/data
+      - miwayomi-update-disabled:/data/update:ro
+    depends_on:
+      flaresolverr:
+        condition: service_healthy
+      initialize:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:4567/api/v1/health
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    profiles:
+      - anime
+  miwayomi-gateway:
+    mem_limit: 128m
+    image: nginx:1.30.4-alpine@sha256:97d490c12ba55b4946b01546d1c3ed324e8d41ab1c9fcb2a616aa470620e5b46
+    restart: unless-stopped
+    networks:
+      - arrnet
+    ports:
+      - ${ARR_BIND_ADDR:-127.0.0.1}:${MIWAYOMI_GATEWAY_PORT:-4568}:4568
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      UMASK: "002"
+    volumes:
+      - ./images/miwayomi/gateway.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      miwayomi:
+        condition: service_healthy
+      initialize:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - -qO-
+        - http://127.0.0.1:4568/api/v1/health
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    profiles:
+      - anime
+  flaresolverr:
+    mem_limit: 1536m
+    image: ghcr.io/miwayomi/flaresolverr:0.2.9@sha256:41207a879aebc3e36101734377041a9d82e7375db274aebc0d15c87e51134189
+    restart: unless-stopped
+    networks:
+      - arrnet
+    ports:
+      - ${ARR_BIND_ADDR:-127.0.0.1}:${FLARESOLVERR_PORT:-8191}:8191
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:8191/
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      UMASK: "002"
+    volumes:
+      - flaresolverr:/config
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    profiles:
+      - manga
+      - anime
+    depends_on:
+      initialize:
+        condition: service_completed_successfully
+  audiobookshelf:
+    mem_limit: 768m
+    image: ghcr.io/advplyr/audiobookshelf:2.36.1@sha256:3528a93b6442ffe54bd46771bbbab7c97084e1101071586d9dc2254f30bb4358
+    restart: unless-stopped
+    networks:
+      - arrnet
+    user: ${PUID:-1000}:${PGID:-1000}
+    environment:
+      TZ: ${TZ:-America/Sao_Paulo}
+    ports:
+      - ${ARR_BIND_ADDR:-127.0.0.1}:${AUDIOBOOKSHELF_PORT:-13378}:80
+    volumes:
+      - audiobookshelf:/config
+      - audiobookshelf-metadata:/metadata
+      - data:/data
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - -qO-
+        - http://127.0.0.1:80/ping
+      interval: 30s
+      timeout: 5s
+      start_period: 60s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    profiles:
+      - audiobooks
+    depends_on:
+      initialize:
+        condition: service_completed_successfully
+  readmeabook:
+    mem_limit: 2g
+    image: ghcr.io/kikootwo/readmeabook:1.2.3@sha256:a769c582af85cadb8b048ebd1069ee1946b4ff1930ba8da2978c9fef6fc29638
+    restart: unless-stopped
+    networks:
+      - arrnet
+    environment:
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      TZ: ${TZ:-America/Sao_Paulo}
+      PUBLIC_URL: ${READMEABOOK_PUBLIC_URL:-http://localhost:3030}
+      UMASK: "002"
+    ports:
+      - ${ARR_BIND_ADDR:-127.0.0.1}:${READMEABOOK_PORT:-3030}:3030
+    volumes:
+      - readmeabook-config:/app/config
+      - readmeabook-cache:/app/cache
+      - readmeabook-pgdata:/var/lib/postgresql/data
+      - readmeabook-redis:/var/lib/redis
+      - data:/data
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:3030/api/health
+      interval: 30s
+      timeout: 10s
+      start_period: 120s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    profiles:
+      - audiobooks
+    depends_on:
+      initialize:
+        condition: service_completed_successfully
+  initialize:
+    image: ${COMPOSE_PROJECT_NAME:-arr-stack}-tools:0.1.0
+    build: &id001
+      context: .
+    networks: &id002
+      - arrnet
+    volumes: &id003
+      - audiobookshelf-metadata:/stack/config/audiobookshelf-metadata
+      - audiobookshelf:/stack/config/audiobookshelf
+      - bazarr:/stack/config/bazarr
+      - flaresolverr:/stack/config/flaresolverr
+      - jellyfin:/stack/config/jellyfin
+      - jellyseerr:/stack/config/jellyseerr
+      - miwayomi-update-disabled:/stack/config/miwayomi-update-disabled
+      - miwayomi:/stack/config/miwayomi
+      - prowlarr:/stack/config/prowlarr
+      - qbittorrent:/stack/config/qbittorrent
+      - radarr:/stack/config/radarr
+      - readmeabook-cache:/stack/config/readmeabook/cache
+      - readmeabook-config:/stack/config/readmeabook/config
+      - readmeabook-pgdata:/stack/config/readmeabook/pgdata
+      - readmeabook-redis:/stack/config/readmeabook/redis
+      - sonarr:/stack/config/sonarr
+      - suwayomi:/stack/config/suwayomi
+      - data:/data
+      - state:/state
+      - cleanup-state:/cleanup-state
+      - ./config:/policy:ro
+    environment: &id004
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      PYTHONUNBUFFERED: "1"
+    mem_limit: 256m
+    logging: &id005
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+    command:
+      - initialize
+    restart: "no"
+  manage:
+    image: ${COMPOSE_PROJECT_NAME:-arr-stack}-tools:0.1.0
+    build: *id001
+    networks: *id002
+    volumes: *id003
+    environment: *id004
+    mem_limit: 256m
+    logging: *id005
+    profiles:
+      - tools
+    command:
+      - --help
+  configure:
+    image: ${COMPOSE_PROJECT_NAME:-arr-stack}-tools:0.1.0
+    build: *id001
+    networks: *id002
+    volumes: *id003
+    environment: *id004
+    mem_limit: 256m
+    logging: *id005
+    command:
+      - configure
+    restart: on-failure:3
+    depends_on:
+      qbittorrent:
+        condition: service_healthy
+      sonarr:
+        condition: service_healthy
+      radarr:
+        condition: service_healthy
+      prowlarr:
+        condition: service_healthy
+      jellyseerr:
+        condition: service_healthy
+      cleanup:
+        condition: service_healthy
+  cleanup:
+    image: ${COMPOSE_PROJECT_NAME:-arr-stack}-tools:0.1.0
+    build: *id001
+    networks: *id002
+    volumes: *id003
+    environment: *id004
+    mem_limit: 256m
+    logging: *id005
+    command:
+      - cleanup
+    restart: unless-stopped
+    depends_on:
+      qbittorrent:
+        condition: service_healthy
+      sonarr:
+        condition: service_healthy
+      radarr:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request; urllib.request.urlopen("http://127.0.0.1:8789/health", timeout=3)
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+networks:
+  arrnet: {}
+volumes:
+  data: {}
+  state: {}
+  cleanup-state: {}
+  qbittorrent: {}
+  prowlarr: {}
+  sonarr: {}
+  radarr: {}
+  bazarr: {}
+  jellyfin: {}
+  jellyseerr: {}
+  suwayomi: {}
+  miwayomi: {}
+  miwayomi-update-disabled: {}
+  flaresolverr: {}
+  audiobookshelf: {}
+  audiobookshelf-metadata: {}
+  readmeabook-config: {}
+  readmeabook-cache: {}
+  readmeabook-pgdata: {}
+  readmeabook-redis: {}

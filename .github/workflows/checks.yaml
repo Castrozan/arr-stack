@@ -1,0 +1,24 @@
+name: checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  unit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - run: docker build --target tests -t arr-stack-tests .
+      - run: docker run --rm arr-stack-tests
+      - run: docker compose --profile '*' config --quiet
+      - run: docker compose -f compose.yaml -f compose.nvidia.yaml config --quiet
+      - run: ARR_DATA_DIRECTORY=/tmp docker compose -f compose.yaml -f compose.storage.yaml config --quiet
+  smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - run: bash tests/smoke.sh

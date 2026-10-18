@@ -1,0 +1,7 @@
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${ARR_DATA_DIRECTORY:?set ARR_DATA_DIRECTORY to an existing absolute Linux path}

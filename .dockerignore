@@ -1,0 +1,8 @@
+.git
+.deep-work
+.env
+.env.*
+__pycache__
+.pytest_cache
+.ruff_cache
+config/local*.json
