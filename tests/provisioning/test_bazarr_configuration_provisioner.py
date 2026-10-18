@@ -84,6 +84,7 @@ def test_bootstraps_subtitles_without_overwriting_other_choices():
     assert result["assigned"] == 2
     assert server.profiles[0]["name"] == "Custom profile"
     assert server.profiles[1]["profileId"] == 10
+    assert server.profiles[1]["cutoff"] is None
     assert {language["code2"] for language in server.languages} == {"en", "pb", "ja"}
     assert set(server.settings["enabled_providers"]) == {
         "custom",

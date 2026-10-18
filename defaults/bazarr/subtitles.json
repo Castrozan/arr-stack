@@ -9,7 +9,7 @@
   ],
   "profile": {
     "name": "English + Brazilian Portuguese",
-    "cutoff": 65535,
+    "cutoff": null,
     "items": [
       {
         "id": 1,

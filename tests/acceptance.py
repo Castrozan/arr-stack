@@ -67,6 +67,7 @@ def verify_configuration():
         if profile["name"] == "English + Brazilian Portuguese"
     )
     assert {item["language"] for item in profile["items"]} == {"en", "pb"}
+    assert profile["cutoff"] is None
     assert all(item["audio_only_include"] == "False" for item in profile["items"])
     settings = bazarr.request("system/settings")["general"]
     assert settings["movie_default_enabled"] and settings["serie_default_enabled"]
