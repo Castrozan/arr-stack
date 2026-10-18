@@ -1,4 +1,10 @@
 services:
+  configure:
+    volumes:
+      - ${ARR_SMOKE_DEFAULTS_DIRECTORY:?Smoke defaults are required}:/app/defaults:ro
+  manage:
+    volumes:
+      - ${ARR_SMOKE_DEFAULTS_DIRECTORY:?Smoke defaults are required}:/app/defaults:ro
   qbittorrent:
     ports: !reset []
   sonarr:

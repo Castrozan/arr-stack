@@ -2,6 +2,10 @@ import json
 import os
 from pathlib import Path
 
+from arr_config_provisioner.bazarr_api_client import (
+    BazarrApiClient,
+    read_bazarr_api_key,
+)
 from arr_config_provisioner.qbittorrent_api_client import (
     build_authenticated_opener,
     read_preferences,
@@ -54,6 +58,21 @@ def verify_configuration():
     assert sorted(value["name"] for value in applications) == ["Radarr", "Sonarr"]
     indexers = prowlarr.request("GET", "/api/v1/indexer")
     assert len(indexers) == 6
+    bazarr = BazarrApiClient(
+        APPLICATION_URLS["bazarr"], read_bazarr_api_key("/stack/config")
+    )
+    profile = next(
+        profile
+        for profile in bazarr.request("system/languages/profiles")
+        if profile["name"] == "English + Brazilian Portuguese"
+    )
+    assert {item["language"] for item in profile["items"]} == {"en", "pb"}
+    assert all(item["audio_only_include"] == "False" for item in profile["items"])
+    settings = bazarr.request("system/settings")["general"]
+    assert settings["movie_default_enabled"] and settings["serie_default_enabled"]
+    assert str(settings["movie_default_profile"]) == str(profile["profileId"])
+    assert str(settings["serie_default_profile"]) == str(profile["profileId"])
+    assert {"embeddedsubtitles", "podnapisi"} <= set(settings["enabled_providers"])
     values = json.loads(Path("/state/credentials.json").read_text())
     opener = build_authenticated_opener(
         APPLICATION_URLS["qbittorrent"], "admin", values["qbittorrent"]

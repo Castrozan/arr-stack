@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
+export ARR_SMOKE_DEFAULTS_DIRECTORY="$(mktemp -d)"
+python3 tests/prepare_smoke_defaults.py "$ARR_SMOKE_DEFAULTS_DIRECTORY"
 compose=(docker compose -p "arr-ci-${GITHUB_RUN_ID:-$(date +%s)}" -f compose.yaml -f tests/compose.smoke.yaml)
 finish() {
 	result=$?
 	if ((result != 0)); then "${compose[@]}" logs --no-color --tail 150; fi
 	"${compose[@]}" down
+	rm -rf -- "$ARR_SMOKE_DEFAULTS_DIRECTORY"
 	exit "$result"
 }
 trap finish EXIT
