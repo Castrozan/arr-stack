@@ -30,10 +30,10 @@ let
     proxy_set_header X-Forwarded-Proto https;
     proxy_set_header Accept-Encoding "";
     sub_filter_once off;
-    sub_filter_types application/javascript text/javascript;
+    sub_filter_types application/javascript text/javascript text/x-component;
     sub_filter 'rel="manifest"' 'rel="manifest" crossorigin="use-credentials"';
     sub_filter '"rel":"manifest"' '"rel":"manifest","crossorigin":"use-credentials"';
-    sub_filter '\"rel\":\"manifest\",\"href\":\"/manifest.json\",\"crossOrigin\":\"$undefined\"' '\"rel\":\"manifest\",\"href\":\"/manifest.json\",\"crossOrigin\":\"use-credentials\"';
+    sub_filter '\\\"rel\\\":\\\"manifest\\\",\\\"href\\\":\\\"/manifest.json\\\",\\\"crossOrigin\\\":\\\"''${arrMediaManifestDollar}undefined\\\"' '\\\"rel\\\":\\\"manifest\\\",\\\"href\\\":\\\"/manifest.json\\\",\\\"crossOrigin\\\":\\\"use-credentials\\\"';
     proxy_buffering off;
     proxy_read_timeout 3600s;
     proxy_send_timeout 3600s;
@@ -113,6 +113,9 @@ in
       recommendedOptimisation = true;
       clientMaxBodySize = "512m";
       appendHttpConfig = ''
+        geo $arrMediaManifestDollar {
+          default "$";
+        }
         set_real_ip_from 127.0.0.1;
         real_ip_header X-Forwarded-For;
         map $remote_addr $arrMediaRateLimitKey {
