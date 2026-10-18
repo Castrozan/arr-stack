@@ -130,35 +130,33 @@ in
               };
             };
 
-        arr-stack-front-ends-compose =
-          lib.mkIf (mountGuardConfig.enable && mountGuardConfig.frontEndServices != [ ])
-            {
-              description = "Apply the arr-stack always-on front ends after their Compose declaration is deployed";
-              after = [
-                "docker.service"
-                "network-online.target"
-              ]
-              ++ frontEndComposeGuardUnits
-              ++ mountGuardConfig.composeDeclarationProviderUnits
-              ++ mountGuardConfig.composeApplicatorPredecessorUnits;
-              requires = [
-                "docker.service"
-              ]
-              ++ frontEndComposeGuardUnits
-              ++ mountGuardConfig.composeDeclarationProviderUnits
-              ++ mountGuardConfig.composeApplicatorPredecessorUnits;
-              wants = [ "network-online.target" ];
-              wantedBy = [ "multi-user.target" ];
-              restartTriggers = [
-                ../../../compose.yaml
-                ../stack/render_compose.py
-              ];
-              serviceConfig = {
-                Type = "oneshot";
-                RemainAfterExit = true;
-                ExecStart = frontEndApplyCommand;
-              };
-            };
+        arr-stack-front-ends-compose = lib.mkIf (mountGuardConfig.frontEndServices != [ ]) {
+          description = "Apply the arr-stack always-on front ends after their Compose declaration is deployed";
+          after = [
+            "docker.service"
+            "network-online.target"
+          ]
+          ++ frontEndComposeGuardUnits
+          ++ mountGuardConfig.composeDeclarationProviderUnits
+          ++ mountGuardConfig.composeApplicatorPredecessorUnits;
+          requires = [
+            "docker.service"
+          ]
+          ++ frontEndComposeGuardUnits
+          ++ mountGuardConfig.composeDeclarationProviderUnits
+          ++ mountGuardConfig.composeApplicatorPredecessorUnits;
+          wants = [ "network-online.target" ];
+          wantedBy = [ "multi-user.target" ];
+          restartTriggers = [
+            ../../../compose.yaml
+            ../stack/render_compose.py
+          ];
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+            ExecStart = frontEndApplyCommand;
+          };
+        };
       };
 
       timers.arr-stack-on-demand-supervisor = {

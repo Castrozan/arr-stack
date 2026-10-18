@@ -23,6 +23,12 @@ in
     ../modules/extension-repositories/suwayomi-extension-repositories-nixos.nix
   ];
   config = lib.mkIf settings.enable {
+    assertions = [
+      {
+        assertion = (settings.dataMountUnit == null) == (settings.dataDeviceUnit == null);
+        message = "services.arrStack.dataMountUnit and dataDeviceUnit must be configured together.";
+      }
+    ];
     virtualisation.docker.enable = true;
     users.users.${settings.user}.extraGroups = [ "docker" ];
     hardware.nvidia-container-toolkit.enable = settings.hardwareAcceleration == "nvidia";

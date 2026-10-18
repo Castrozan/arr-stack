@@ -53,6 +53,8 @@ in
     assert configuration.services.arrStack.userId == 1000;
     assert !(configuration.systemd.services ? jellyseerr-email-notifications);
     assert !(configuration.systemd.services ? miwayomi-extension-repositories);
+    assert configuration.systemd.services.arr-stack-front-ends-compose.serviceConfig.ExecStart != "";
+    assert !(configuration.systemd.services ? arr-stack-drive-guard);
     assert
       configuration.systemd.services.jellyfin-library-access-provisioner.environment.ARR_USERS_LIBRARY_ROOT
       == "/media";
