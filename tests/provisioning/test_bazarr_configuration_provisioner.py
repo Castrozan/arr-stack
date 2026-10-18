@@ -46,6 +46,13 @@ class BazarrServer:
                     if path == "movies"
                     else ("sonarrSeriesId", "seriesid")
                 )
+                profile = next(
+                    profile
+                    for profile in self.profiles
+                    if str(profile["profileId"]) == form["profileid"][0]
+                )
+                for item in profile["items"]:
+                    assert item["audio_only_include"] == "False"
                 for record in self.media[path]:
                     if record[identifier_key] in form[form_key]:
                         record["profileId"] = int(form["profileid"][0])
