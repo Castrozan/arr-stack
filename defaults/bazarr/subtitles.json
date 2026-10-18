@@ -4,8 +4,7 @@
     "pb"
   ],
   "providers": [
-    "embeddedsubtitles",
-    "podnapisi"
+    "embeddedsubtitles"
   ],
   "profile": {
     "name": "English + Brazilian Portuguese",

@@ -39,7 +39,8 @@ def settings_changes(client, definition, profiles, identifier, profile_changed):
     if profile_changed:
         changes["languages-profiles"] = json.dumps(profiles)
     providers = sorted(
-        set(settings.get("enabled_providers", [])) | set(definition["providers"])
+        (set(settings.get("enabled_providers", [])) - {"podnapisi"})
+        | set(definition["providers"])
     )
     if set(providers) != set(settings.get("enabled_providers", [])):
         changes["settings-general-enabled_providers"] = providers

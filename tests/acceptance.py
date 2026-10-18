@@ -73,7 +73,8 @@ def verify_configuration():
     assert settings["movie_default_enabled"] and settings["serie_default_enabled"]
     assert str(settings["movie_default_profile"]) == str(profile["profileId"])
     assert str(settings["serie_default_profile"]) == str(profile["profileId"])
-    assert {"embeddedsubtitles", "podnapisi"} <= set(settings["enabled_providers"])
+    assert "embeddedsubtitles" in settings["enabled_providers"]
+    assert "podnapisi" not in settings["enabled_providers"]
     values = json.loads(Path("/state/credentials.json").read_text())
     opener = build_authenticated_opener(
         APPLICATION_URLS["qbittorrent"], "admin", values["qbittorrent"]

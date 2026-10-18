@@ -16,7 +16,7 @@ class BazarrServer:
     def __init__(self):
         self.profiles = []
         self.languages = [{"code2": "ja", "enabled": True}]
-        self.settings = {"enabled_providers": ["custom"]}
+        self.settings = {"enabled_providers": ["custom", "podnapisi"]}
         self.media = {
             "movies": [
                 {"radarrId": 4, "profileId": None},
@@ -89,7 +89,6 @@ def test_bootstraps_subtitles_without_overwriting_other_choices():
     assert set(server.settings["enabled_providers"]) == {
         "custom",
         "embeddedsubtitles",
-        "podnapisi",
     }
     assert server.settings["movie_default_enabled"] is True
     assert server.settings["serie_default_profile"] == "10"

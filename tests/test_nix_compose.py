@@ -79,3 +79,12 @@ def test_jellyseerr_configuration_and_cache_belong_to_the_configured_nix_owner()
     assert service["tmpfs"] == [
         "/app/.next/cache:uid=${PUID},gid=${PGID},mode=0700,size=67108864"
     ]
+
+
+def test_provisioning_waits_for_every_application_api():
+    from stack.provisioning import APPLICATION_URLS
+
+    services = yaml.safe_load((ROOT / "compose.yaml").read_text())["services"]
+    dependencies = services["configure"]["depends_on"]
+    for application in APPLICATION_URLS:
+        assert dependencies[application]["condition"] == "service_healthy"

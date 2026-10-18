@@ -551,6 +551,8 @@ services:
       - configure
     restart: on-failure:3
     depends_on:
+      bazarr:
+        condition: service_healthy
       qbittorrent:
         condition: service_healthy
       sonarr:
