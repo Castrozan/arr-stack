@@ -1234,7 +1234,7 @@
     "definitionName": "limetorrents",
     "description": "LimeTorrents is a Public general torrent index with mostly verified torrents",
     "downloadClientId": 0,
-    "enable": true,
+    "enable": false,
     "encoding": "Unicode (UTF-8)",
     "fields": [
       {
@@ -2581,7 +2581,7 @@
     "definitionName": "thepiratebay",
     "description": "The Pirate Bay (TPB) is the galaxy’s most resilient Public BitTorrent site",
     "downloadClientId": 0,
-    "enable": true,
+    "enable": false,
     "encoding": "Unicode (UTF-8)",
     "fields": [
       {
