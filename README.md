@@ -25,7 +25,7 @@ Open http://localhost:8096 to watch and http://localhost:5055 to request. Both u
 - HD profiles plus PT-BR dubbed/subtitled options, original-language television, and English-caption anime preferences.
 - One account per friend for watching and requesting, automatic approval, and public-library access only.
 - Three simultaneous downloads, continued seeding, and authenticated cleanup after a library title is removed.
-- Jellyseerr's Clear Data removes a held title and its files from Sonarr or Radarr instead of letting the next library scan recreate it.
+- Jellyseerr hides Clear Data so Remove from Sonarr or Radarr is the one delete button, and a Clear Data API request also deletes a held title's files.
 - A shared `/data` filesystem for downloads and finished media so imports can use hardlinks.
 - Pinned application releases, health checks, bounded container memory, and rotating logs.
 

@@ -1,8 +1,6 @@
 const assert = require("node:assert/strict");
 const { once } = require("node:events");
-const fs = require("node:fs");
 const http = require("node:http");
-const path = require("node:path");
 const { createRequire } = require("node:module");
 const requireApplication = createRequire("/app/package.json");
 const express = requireApplication("express");
@@ -155,30 +153,6 @@ async function main() {
   applicationServer.close();
   libraryServer.close();
 }
-
-function filesBelow(directory) {
-  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    const entryPath = path.join(directory, entry.name);
-    if (entry.isDirectory()) {
-      return filesBelow(entryPath);
-    }
-    return entry.name.endsWith(".js") ? [entryPath] : [];
-  });
-}
-
-const builtPages = filesBelow("/app/.next").map((file) =>
-  fs.readFileSync(file, "utf8"),
-);
-assert.ok(
-  !builtPages.some((page) =>
-    page.includes("media information will be recreated"),
-  ),
-);
-assert.ok(
-  builtPages.some((page) =>
-    page.includes("remove it from Sonarr or Radarr, including all files"),
-  ),
-);
 
 main().then(
   () => process.exit(0),

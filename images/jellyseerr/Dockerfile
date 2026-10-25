@@ -3,6 +3,7 @@ COPY available_media_email.js /tmp/available_media_email.js
 COPY request-progress.css /app/public/request-progress.css
 COPY request_progress_stylesheet.js /tmp/request_progress_stylesheet.js
 COPY clear_media_removes_library_files.js /tmp/clear_media_removes_library_files.js
+COPY hide_clear_data_button.cjs /tmp/hide_clear_data_button.cjs
 COPY --chown=node:node test_available_media_email.cjs /tmp/test_available_media_email.cjs
 COPY --chown=node:node test_request_progress_stylesheet.cjs /tmp/test_request_progress_stylesheet.cjs
 COPY --chown=node:node test_clear_media_removes_library_files.cjs /tmp/test_clear_media_removes_library_files.cjs
@@ -11,10 +12,10 @@ RUN cat /tmp/available_media_email.js >> /app/dist/lib/notifications/agents/emai
     && cat /tmp/request_progress_stylesheet.js >> /app/.next/server/pages/_document.js \
     && sed -i 's/| View Media in #{applicationTitle}/| #{actionLabel || "View Media in " + applicationTitle}/' /app/dist/templates/email/media-request/html.pug \
     && cat /tmp/clear_media_removes_library_files.js >> /app/dist/routes/media.js \
-    && grep -rlF 'media information will be recreated' /app/.next | xargs sed -i 's/including any requests\. If this item exists in your {mediaServerName} library, the media information will be recreated during the next scan\./including any requests, and remove it from Sonarr or Radarr, including all files./' \
+    && node /tmp/hide_clear_data_button.cjs $(grep -rlF '.manageModalClearMedia)' /app/.next) \
     && mkdir -p /app/.next/cache \
     && chown -R node:node /app/config /app/.next/cache \
-    && rm /tmp/available_media_email.js /tmp/request_progress_stylesheet.js /tmp/clear_media_removes_library_files.js
+    && rm /tmp/available_media_email.js /tmp/request_progress_stylesheet.js /tmp/clear_media_removes_library_files.js /tmp/hide_clear_data_button.cjs
 USER node
 RUN node /tmp/test_available_media_email.cjs && rm /tmp/test_available_media_email.cjs
 RUN node /tmp/test_request_progress_stylesheet.cjs && rm /tmp/test_request_progress_stylesheet.cjs
