@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -109,6 +110,7 @@ in
   config = lib.mkIf arrMediaLoginRateLimitProxyConfig.enable {
     services.nginx = {
       enable = true;
+      package = import ./nginx-package.nix { inherit pkgs; };
       recommendedProxySettings = true;
       recommendedOptimisation = true;
       clientMaxBodySize = "512m";
