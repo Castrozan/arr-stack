@@ -74,6 +74,12 @@ in
       default = "";
       description = "Path to the agenix-decrypted prowlarr web-UI login password; prowlarr's Forms auth is left untouched when unset.";
     };
+
+    downloadChainProviderUnits = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Units that bring the download chain up and finish once it is healthy, ordered before the reconcile so it never races the radarr, sonarr, prowlarr, qBittorrent and bazarr container start at boot or when a rebuild reapplies the stack.";
+    };
   };
 
   config = lib.mkIf arrConfigProvisionerConfig.enable {
@@ -82,7 +88,8 @@ in
       after = [
         "docker.service"
         "network-online.target"
-      ];
+      ]
+      ++ arrConfigProvisionerConfig.downloadChainProviderUnits;
       wants = [ "network-online.target" ];
       wantedBy = [ "multi-user.target" ];
       environment = {

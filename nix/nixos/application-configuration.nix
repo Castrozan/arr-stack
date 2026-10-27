@@ -4,6 +4,13 @@ let
   secret = name: settings.secrets.${name}.file or "";
   homeUnit = "home-manager-${settings.user}.service";
   stack = settings.directory;
+  alwaysOnStackUnits = [
+    "arr-stack-front-ends-compose.service"
+  ]
+  ++ lib.optional (
+    settings.dataMountUnit != null && settings.dataDeviceUnit != null
+  ) "arr-stack-drive-guard.service";
+  downloadChainStackUnits = lib.optionals settings.keepChainAlwaysOn alwaysOnStackUnits;
 in
 {
   config = lib.mkIf settings.enable {
@@ -68,12 +75,14 @@ in
         radarrPasswordSecretFile = secret "radarrPassword";
         sonarrPasswordSecretFile = secret "sonarrPassword";
         prowlarrPasswordSecretFile = secret "prowlarrPassword";
+        downloadChainProviderUnits = downloadChainStackUnits;
       };
       arrDownloadCleanup = {
         enable = true;
         stackHomeDirectory = stack;
         qbittorrentPasswordSecretFile = secret "qbittorrentPassword";
         jellyfinApiKeySecretFile = secret "jellyfinApiKey";
+        downloadChainProviderUnits = downloadChainStackUnits;
       };
       jellyfinLibraryAccessProvisioner = {
         enable = true;
@@ -89,6 +98,7 @@ in
         enable = true;
         jellyfinApiKeySecretFile = secret "jellyfinApiKey";
         jellyseerrSettingsFile = "${stack}/config/jellyseerr/settings.json";
+        serviceProviderUnits = alwaysOnStackUnits;
         orderedBeforeUnits = [ "jellyseerr-private-request-routing-provisioner.service" ];
       };
       jellyseerrPrivateRequestRoutingProvisioner = {

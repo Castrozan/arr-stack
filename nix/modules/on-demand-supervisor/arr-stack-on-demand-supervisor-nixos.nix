@@ -20,13 +20,18 @@ let
       --project-name ${arrStackOnDemandSupervisorConfig.composeProjectName} \
       stop --timeout 30 ${lib.concatStringsSep " " arrStackOnDemandSupervisorConfig.onDemandServices} || true
   '';
+  alwaysOnServices =
+    mountGuardConfig.frontEndServices
+    ++ lib.optionals arrStackOnDemandSupervisorConfig.keepChainAlwaysOn arrStackOnDemandSupervisorConfig.onDemandServices;
+  alwaysOnHealthyTimeoutSeconds = 300;
   frontEndComposeCommand = ''
     ${pkgs.docker-compose}/bin/docker-compose \
       --file ${stackHome}/docker-compose.yml \
       --env-file ${stackHome}/.env \
       --project-directory ${stackHome} \
       --project-name ${arrStackOnDemandSupervisorConfig.composeProjectName} \
-      up --detach ${lib.concatStringsSep " " mountGuardConfig.frontEndServices}
+      up --detach --wait --wait-timeout ${toString alwaysOnHealthyTimeoutSeconds} \
+      ${lib.concatStringsSep " " alwaysOnServices}
   '';
   frontEndApplyScript = pkgs.writeShellScript "arr-stack-front-ends-apply" frontEndComposeCommand;
   driveGuardStartScript = pkgs.writeShellScript "arr-stack-drive-guard-start" ''

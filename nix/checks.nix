@@ -48,6 +48,8 @@ let
   environment = pkgs.writeText "arr-check.env" home.home.file."arr-stack/.env".text;
   desiredState =
     configuration.systemd.services.arr-config-provisioner.environment.ARR_PROVISIONER_DESIRED_STATE_DIR;
+  services = configuration.systemd.services;
+  alwaysOnApply = services.arr-stack-front-ends-compose.serviceConfig.ExecStart;
 in
 {
   deployment =
@@ -65,11 +67,16 @@ in
     assert
       configuration.systemd.services.jellyfin-library-access-provisioner.environment.ARR_USERS_LIBRARY_ROOT
       == "/media";
+    assert builtins.elem "arr-stack-front-ends-compose.service"
+      services.jellyseerr-account-permission-provisioner.after;
+    assert builtins.elem "arr-stack-front-ends-compose.service" services.arr-download-cleanup.after;
     pkgs.runCommand "arr-stack-deployment-check" { nativeBuildInputs = [ pkgs.docker-compose ]; } ''
       docker-compose --file ${compose} --env-file ${environment} config --quiet
       test -f ${desiredState}/prowlarr/indexer.json
       test -f ${desiredState}/sonarr/notification.json
       test -f ${desiredState}/radarr/notification.json
+      grep -q -- "up --detach --wait --wait-timeout" ${alwaysOnApply}
+      grep -q -- " qbittorrent" ${alwaysOnApply}
       cp ${compose} "$out"
     '';
 }

@@ -24,6 +24,11 @@ in
       type = lib.types.str;
       description = "Jellyfin API key supplied through systemd credentials for library refresh after cleanup.";
     };
+    downloadChainProviderUnits = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Units that bring qBittorrent, Radarr and Sonarr up and finish once they are healthy, ordered before the cleanup bootstrap. The bootstrap reads all three, so without this ordering it races their container start at boot and restart-loops on refused connections.";
+    };
   };
 
   config = lib.mkIf cleanupConfig.enable {
@@ -32,7 +37,8 @@ in
       after = [
         "docker.service"
         "network-online.target"
-      ];
+      ]
+      ++ cleanupConfig.downloadChainProviderUnits;
       wants = [ "network-online.target" ];
       wantedBy = [ "multi-user.target" ];
       unitConfig.RequiresMountsFor = [ "${cleanupConfig.stackHomeDirectory}/data" ];

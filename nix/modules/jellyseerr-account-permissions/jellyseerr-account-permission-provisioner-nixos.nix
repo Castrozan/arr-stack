@@ -34,6 +34,12 @@ in
       description = "Path to the Jellyseerr settings.json the reconciler reads its admin API key out of; the user permission endpoints are admin-gated. Jellyseerr resolves that key to its owner account, so the reconcile keeps working no matter which permissions the human accounts hold.";
     };
 
+    serviceProviderUnits = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Units that bring the Jellyfin and Jellyseerr containers up and finish once they are healthy, ordered before this reconcile so it never races their container start at boot.";
+    };
+
     orderedBeforeUnits = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
@@ -47,7 +53,8 @@ in
       after = [
         "docker.service"
         "network-online.target"
-      ];
+      ]
+      ++ accountPermissionConfig.serviceProviderUnits;
       before = accountPermissionConfig.orderedBeforeUnits;
       wants = [ "network-online.target" ];
       wantedBy = [ "multi-user.target" ];
