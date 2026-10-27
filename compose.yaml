@@ -377,7 +377,7 @@ services:
       - anime
   flaresolverr:
     mem_limit: 1536m
-    image: ghcr.io/miwayomi/flaresolverr:0.2.9@sha256:41207a879aebc3e36101734377041a9d82e7375db274aebc0d15c87e51134189
+    image: ghcr.io/seomavares/flaresolverr:0.2.9@sha256:41207a879aebc3e36101734377041a9d82e7375db274aebc0d15c87e51134189
     restart: unless-stopped
     networks:
       - arrnet
