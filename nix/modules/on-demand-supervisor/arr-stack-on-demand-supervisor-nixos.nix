@@ -142,14 +142,12 @@ in
             "network-online.target"
           ]
           ++ frontEndComposeGuardUnits
-          ++ mountGuardConfig.composeDeclarationProviderUnits
-          ++ mountGuardConfig.composeApplicatorPredecessorUnits;
+          ++ mountGuardConfig.composeDeclarationProviderUnits;
           requires = [
             "docker.service"
           ]
           ++ frontEndComposeGuardUnits
-          ++ mountGuardConfig.composeDeclarationProviderUnits
-          ++ mountGuardConfig.composeApplicatorPredecessorUnits;
+          ++ mountGuardConfig.composeDeclarationProviderUnits;
           wants = [ "network-online.target" ];
           wantedBy = [ "multi-user.target" ];
           restartTriggers = [

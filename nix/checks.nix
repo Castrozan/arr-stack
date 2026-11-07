@@ -61,7 +61,7 @@ in
     assert pkgs.lib.hasInfix "chown -R 2000:100"
       configuration.systemd.services.arr-stack-front-ends-compose.preStart;
     assert !(configuration.systemd.services ? jellyseerr-email-notifications);
-    assert !(configuration.systemd.services ? miwayomi-extension-repositories);
+    assert !(configuration.systemd.services ? suwayomi-extension-repositories);
     assert configuration.systemd.services.arr-stack-front-ends-compose.serviceConfig.ExecStart != "";
     assert !(configuration.systemd.services ? arr-stack-drive-guard);
     assert

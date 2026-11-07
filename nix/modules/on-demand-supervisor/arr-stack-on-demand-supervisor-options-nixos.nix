@@ -173,12 +173,6 @@
         description = "Units that must finish installing the Compose declaration before the front-end roster applicator runs.";
       };
 
-      composeApplicatorPredecessorUnits = lib.mkOption {
-        type = lib.types.listOf lib.types.str;
-        default = [ ];
-        description = "Compose applicator units that must settle before the front-end roster is applied.";
-      };
-
       frontEndServices = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ ];

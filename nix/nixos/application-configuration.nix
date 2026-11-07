@@ -35,28 +35,15 @@ in
           dataDeviceUnit = if settings.dataDeviceUnit == null then "" else settings.dataDeviceUnit;
           dataMountUnit = if settings.dataMountUnit == null then "" else settings.dataMountUnit;
           composeDeclarationProviderUnits = [ homeUnit ];
-          composeApplicatorPredecessorUnits = [ "miwayomi-compose.service" ];
           frontEndServices = [
             "jellyfin"
             "jellyseerr"
             "suwayomi"
-            "miwayomi"
-            "miwayomi-gateway"
             "flaresolverr"
             "audiobookshelf"
             "readmeabook"
           ];
         };
-      };
-      miwayomi = {
-        enable = true;
-        stackHomeDirectory = stack;
-        baseUrl = "http://${settings.bindAddress}:4568";
-        repositoryListSecretFile = secret "extensionRepositories";
-        inherit (settings) removedExtensionPackages;
-        composePredecessorUnits = lib.optional (
-          settings.dataMountUnit != null
-        ) "arr-stack-drive-guard.service";
       };
       jellyseerrEmailNotifications = {
         enable = secret "smtpPassword" != "";

@@ -31,10 +31,7 @@ def test_nix_deployment_uses_existing_configuration_without_bootstrapping_creden
         assert service["container_name"] == f"arr-{name}"
         assert "initialize" not in service.get("depends_on", {})
         assert "profiles" not in service
-        assert all(
-            mount.startswith(("${ARR_", "${MIWAYOMI_GATEWAY_CONFIG_PATH}"))
-            for mount in service["volumes"]
-        )
+        assert all(mount.startswith("${ARR_") for mount in service["volumes"])
     assert services["jellyfin"]["volumes"] == [
         "${ARR_CONFIG_ROOT}/jellyfin:/config",
         "${ARR_DATA_ROOT}/media:/media:ro",

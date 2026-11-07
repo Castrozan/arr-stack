@@ -101,10 +101,5 @@ in
       sender = stringOption "" "Notification sender address.";
       recipient = stringOption "" "Disk-guard alert recipient address.";
     };
-    removedExtensionPackages = mkOption {
-      type = types.listOf types.str;
-      default = [ ];
-      description = "Miwayomi source packages that reconciliation removes.";
-    };
   };
 }

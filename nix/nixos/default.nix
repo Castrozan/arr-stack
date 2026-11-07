@@ -7,7 +7,6 @@ in
     ./options.nix
     ./application-configuration.nix
     ./deployment.nix
-    ../modules/miwayomi/miwayomi-nixos.nix
     ../modules/tailscale-funnel/arr-media-tailscale-funnel-nixos.nix
     ../modules/login-rate-limit-proxy/arr-media-login-ratelimit-proxy-nixos.nix
     ../modules/on-demand-supervisor/arr-stack-on-demand-supervisor-nixos.nix

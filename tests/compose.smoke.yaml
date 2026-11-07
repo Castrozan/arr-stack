@@ -21,8 +21,6 @@ services:
     ports: !reset []
   suwayomi:
     ports: !reset []
-  miwayomi-gateway:
-    ports: !reset []
   flaresolverr:
     ports: !reset []
   audiobookshelf:

@@ -1,39 +1,17 @@
-from dataclasses import dataclass
-
 import runtime_configuration
 import suwayomi_graphql_client
 
 
-@dataclass(frozen=True)
-class RepositoryServer:
-    name: str
-    url: str
-    client: object
-    repository_file_variable: str
-    reports_extension_count: bool = True
-
-
-def suwayomi_server():
-    return RepositoryServer(
-        name="Suwayomi",
-        url=runtime_configuration.graphql_url(),
-        client=suwayomi_graphql_client,
-        repository_file_variable=runtime_configuration.DECLARED_REPOSITORY_LIST_FILE_VARIABLE,
-    )
-
-
-def synchronize_extension_repositories(server=None):
-    repository_server = server or suwayomi_server()
-    declared_repository_urls = runtime_configuration.declared_repository_urls(
-        repository_server.repository_file_variable
-    )
+def synchronize_extension_repositories():
+    graphql_url = runtime_configuration.graphql_url()
+    declared_repository_urls = runtime_configuration.declared_repository_urls()
     if declared_repository_urls is None:
         return {
             "repositories": None,
             "rewritten": False,
             "extensions_offered": None,
         }
-    current_repository_urls = _read_current_repository_urls(repository_server)
+    current_repository_urls = _read_current_repository_urls(graphql_url)
     if current_repository_urls == declared_repository_urls:
         return {
             "repositories": current_repository_urls,
@@ -41,38 +19,33 @@ def synchronize_extension_repositories(server=None):
             "extensions_offered": None,
         }
     written_repository_urls = _write_declared_repository_urls(
-        repository_server, declared_repository_urls
-    )
-    extensions_offered = (
-        repository_server.client.count_extensions_offered(repository_server.url)
-        if repository_server.reports_extension_count
-        else None
+        graphql_url, declared_repository_urls
     )
     return {
         "repositories": written_repository_urls,
         "rewritten": True,
-        "extensions_offered": extensions_offered,
+        "extensions_offered": suwayomi_graphql_client.count_extensions_offered(
+            graphql_url
+        ),
     }
 
 
-def _read_current_repository_urls(repository_server):
-    if not repository_server.client.wait_until_ready(repository_server.url):
+def _read_current_repository_urls(graphql_url):
+    if not suwayomi_graphql_client.wait_until_ready(graphql_url):
         raise ValueError(
-            f"{repository_server.name} at {repository_server.url} never became reachable; "
+            f"Suwayomi at {graphql_url} never became reachable; "
             "its extension repositories were left as they already are"
         )
-    return repository_server.client.read_extension_repository_urls(
-        repository_server.url
-    )
+    return suwayomi_graphql_client.read_extension_repository_urls(graphql_url)
 
 
-def _write_declared_repository_urls(repository_server, declared_repository_urls):
-    written_repository_urls = repository_server.client.write_extension_repository_urls(
-        repository_server.url, declared_repository_urls
+def _write_declared_repository_urls(graphql_url, declared_repository_urls):
+    written_repository_urls = suwayomi_graphql_client.write_extension_repository_urls(
+        graphql_url, declared_repository_urls
     )
     if written_repository_urls != declared_repository_urls:
         raise ValueError(
-            f"{repository_server.name} accepted the settings write but reports a list "
+            "Suwayomi accepted the settings write but reports a list "
             "that is not the declared repository list"
         )
     return written_repository_urls

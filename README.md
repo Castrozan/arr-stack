@@ -55,17 +55,16 @@ docker compose run --rm manage users sync-request-routing
 
 The `private-requests` account routes requests to private root folders. Log in as that account to use the routing; an administrator session bypasses upstream override rules. `onboard` creates that account with a generated password; use `users reset-password private-requests` when you want to log in.
 
-## Manga, anime, and audiobooks
+## Manga and audiobooks
 
 Optional services use Compose profiles. You can combine profiles, or set `COMPOSE_PROFILES` in `.env` so later starts select them too.
 
 ```sh
 docker compose --profile manga up -d --build --wait
-docker compose --profile anime up -d --build --wait
 docker compose --profile audiobooks up -d --build --wait
 ```
 
-Manga uses Suwayomi; instant anime playback uses the patched Miwayomi build. Both use FlareSolverr. Configure source extension repositories and sources in those applications; those choices and source credentials are personal. The anime image builds its pinned server source on first use.
+Manga uses Suwayomi with FlareSolverr. Configure source extension repositories and sources in Suwayomi; those choices and source credentials are personal.
 
 Audiobooks use ReadMeABook and Audiobookshelf. Complete their application setup and connect ReadMeABook to `qbittorrent:8080` with the generated qBittorrent credentials. Set downloads under `/data/torrents/audiobooks` and the library under `/data/audiobooks`. Their accounts are separate from Jellyfin.
 
@@ -84,7 +83,7 @@ docker compose up -d --build --wait
 docker compose run --rm manage onboard
 ```
 
-Web ports bind to loopback by default. To serve friends on another device, set `ARR_BIND_ADDR` to an appropriate host interface and provide your own HTTPS reverse proxy or private network. Set `JELLYFIN_PUBLIC_URL` to the browser-facing Jellyfin URL for available-media email links, and configure SMTP in Jellyseerr. Suwayomi and Miwayomi have no application login; remote access to those services needs an authentication boundary.
+Web ports bind to loopback by default. To serve friends on another device, set `ARR_BIND_ADDR` to an appropriate host interface and provide your own HTTPS reverse proxy or private network. Set `JELLYFIN_PUBLIC_URL` to the browser-facing Jellyfin URL for available-media email links, and configure SMTP in Jellyseerr. Suwayomi has no application login; remote access to it needs an authentication boundary.
 
 CPU playback/transcoding is the baseline. Linux hosts with the NVIDIA Container Toolkit can add `-f compose.nvidia.yaml` after `-f compose.yaml`, then select NVIDIA NVENC in Jellyfin. Hardware passthrough on Docker Desktop is outside this preset.
 
@@ -144,7 +143,7 @@ CI validates the Nix deployment and its native automation, then validates Compos
 
 The extracted application settings, Python automation, Nix services, and image customizations originate in https://github.com/Castrozan/.dotfiles/tree/9f9157b56298d2c6fab36a2e0835236d3127673e/machine-configuration/media/arr-stack. Personal account allowlists, domain names, VPN configuration, and secret values stay in the consuming host configuration.
 
-Own integration code is MIT licensed. Miwayomi patch material retains the upstream Apache-2.0 license in `images/miwayomi/LICENSE`; container applications retain their respective licenses. The local patches are carried because this preset depends on their playback, source, artwork, and progress behavior.
+Own integration code is MIT licensed; container applications retain their respective licenses.
 
 Docker storage reference: https://docs.docker.com/engine/storage/volumes/
 

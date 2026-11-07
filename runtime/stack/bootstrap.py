@@ -16,8 +16,6 @@ CONFIGURATION_DIRECTORIES = (
     "jellyfin",
     "jellyseerr",
     "suwayomi",
-    "miwayomi",
-    "miwayomi-update-disabled",
     "flaresolverr",
     "audiobookshelf",
     "audiobookshelf-metadata",

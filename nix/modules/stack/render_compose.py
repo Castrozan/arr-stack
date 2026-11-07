@@ -41,10 +41,6 @@ def render_compose(document, settings):
                     )
                 else:
                     mounts.append("${ARR_DATA_ROOT}:" + destination)
-            elif volume.startswith("./"):
-                mounts.append(
-                    "${MIWAYOMI_GATEWAY_CONFIG_PATH}:/etc/nginx/conf.d/default.conf:ro"
-                )
             else:
                 mounts.append(configuration_path(volume) + ":" + destination)
         service["volumes"] = mounts
@@ -54,7 +50,6 @@ def render_compose(document, settings):
             "prowlarr",
             "jellyseerr",
             "suwayomi",
-            "miwayomi",
             "flaresolverr",
             "audiobookshelf",
             "readmeabook",
@@ -79,11 +74,6 @@ def render_compose(document, settings):
     services["jellyseerr"]["tmpfs"] = [
         "/app/.next/cache:uid=${PUID},gid=${PGID},mode=0700,size=67108864"
     ]
-    services["miwayomi"]["build"]["context"] = "${MIWAYOMI_BUILD_CONTEXT}"
-    services["miwayomi"]["build"]["args"]["MIWAYOMI_WEB_CACHE_VERSION"] = (
-        "${MIWAYOMI_WEB_CACHE_VERSION}"
-    )
-    services["miwayomi"]["image"] = "arr-miwayomi:0.2.9-watch-progress"
     if settings["hardwareAcceleration"] == "nvidia":
         services["jellyfin"]["devices"] = ["nvidia.com/gpu=all"]
         services["jellyfin"]["environment"].update(

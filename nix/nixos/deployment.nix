@@ -17,10 +17,7 @@ let
     lib.filter (source: source != null) (map (name: settings.secrets.${name}.source or null) names);
   disabledServices =
     lib.optional (!config.custom.jellyseerrEmailNotifications.enable) "jellyseerr-email-notifications"
-    ++ lib.optional (!config.custom.audiobookProvisioner.enable) "arr-audiobook-provisioner"
-    ++ lib.optional (
-      (settings.secrets.extensionRepositories.file or "") == ""
-    ) "miwayomi-extension-repositories";
+    ++ lib.optional (!config.custom.audiobookProvisioner.enable) "arr-audiobook-provisioner";
   credentialTriggers = lib.filterAttrs (name: _: !(builtins.elem name disabledServices)) {
     jellyseerr-email-notifications = [ "smtpPassword" ];
     arr-config-provisioner = [
@@ -36,7 +33,6 @@ let
     ];
     bazarr-auth-provisioner = [ "bazarrPassword" ];
     jellyfin-library-access-provisioner = [ "jellyfinApiKey" ];
-    miwayomi-extension-repositories = [ "extensionRepositories" ];
     jellyseerr-private-request-routing-provisioner = [ "jellyfinApiKey" ];
     jellyseerr-account-permission-provisioner = [ "jellyfinApiKey" ];
     arr-audiobook-provisioner = [
