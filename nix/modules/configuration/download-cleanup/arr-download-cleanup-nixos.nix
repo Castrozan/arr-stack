@@ -7,7 +7,7 @@
 let
   cleanupConfig = config.custom.arrDownloadCleanup;
   packageDirectory = lib.cleanSource ../../../../runtime;
-  pythonCommand = "${pkgs.python3}/bin/python3 ${./scripts/cleanup_service.py}";
+  pythonCommand = "${pkgs.python3}/bin/python3 -P ${./scripts/cleanup_service.py}";
 in
 {
   options.custom.arrDownloadCleanup = {
