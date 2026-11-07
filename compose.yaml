@@ -267,7 +267,8 @@ services:
       KCEF_ENABLED: "true"
       FLARESOLVERR_ENABLED: "true"
       FLARESOLVERR_URL: http://flaresolverr:8191
-      JAVA_TOOL_OPTIONS: -Xms128m -Xmx768m
+      JAVA_TOOL_OPTIONS: -Xms64m -Xmx384m -XX:MaxMetaspaceSize=256m -XX:+UseSerialGC
+      MALLOC_ARENA_MAX: "2"
       UMASK: "002"
       DOWNLOADS_PATH: /data/manga
     volumes:
